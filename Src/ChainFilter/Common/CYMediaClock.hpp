@@ -9,7 +9,7 @@
  *
  * ===============================================================================
  *
- * Copyright (C) 2023-2026 ShiLiang.Hao <newhaosl@163.com>
+ * Copyright (C) 2023-2026 ShiLiang.Hao <newhaosl@163.com>, foobra<vipgs99@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@
  * ===============================================================================
  */
  /*
-  * AUTHORS:  ShiLiang.Hao <newhaosl@163.com>
+  * AUTHORS:  ShiLiang.Hao <newhaosl@163.com>, foobra<vipgs99@gmail.com>
   * VERSION:  1.0.0
   * PURPOSE:  Cross-platform efficient all-round player SDK.
   * CREATION: 2025.04.23
