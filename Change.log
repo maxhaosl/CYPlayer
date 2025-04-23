@@ -1,0 +1,16 @@
+CYPlayer V1.0.0 features:
+- 🧩 **Modular architecture** using the Chain of Responsibility pattern
+- 🎞️ **Broad media format support** via FFmpeg
+- 💻 **Cross-platform**: Works on Windows, macOS, Linux, Android, IOS, UE, Unity.
+- 🖼️ **High-performance rendering** using SDL
+- ⚙️ **Pure C++11 implementation**: No external bindings or frameworks
+- 🔧 **Easy to extend**: Plug in custom filters or replace core components
+
++-------------+ +-------------+ +--------------+ +--------------+ +--------------+ 
+| SourceFilter| --> | DemuxFilter | --> | DecodeFilter | --> | ProcessFilter| --> | RenderFilter | 
++-------------+ +-------------+ +--------------+ +--------------+ +--------------+
+
+Included plugins:
+
+1.ffmpeg.
+2.SDL2.

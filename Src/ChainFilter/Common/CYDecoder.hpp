@@ -1,0 +1,96 @@
+/*
+ * CYPlayer License
+ * -----------
+ *
+ * CYPlayer is licensed under the terms of the MIT license reproduced below.
+ * This means that CYPlayer is free software and can be used for both academic
+ * and commercial purposes at absolutely no cost.
+ *
+ *
+ * ===============================================================================
+ *
+ * Copyright (C) 2023-2026 ShiLiang.Hao <newhaosl@163.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * ===============================================================================
+ */
+ /*
+  * AUTHORS:  ShiLiang.Hao <newhaosl@163.com>
+  * VERSION:  1.0.0
+  * PURPOSE:  Cross-platform efficient all-round player SDK.
+  * CREATION: 2025.04.23
+  * LCHANGE:  2025.04.23
+  * LICENSE:  Expat/MIT License, See Copyright Notice at the begin of this file.
+  */
+
+
+#ifndef __CY_DECODER_HPP__
+#define __CY_DECODER_HPP__
+
+#include "CYPlayerPrivDefine.hpp"
+#include "Common/CYFFmpegDefine.hpp"
+#include "Common/Thread/CYCondition.hpp"
+#include "Common/Queue/CYPacketQueue.hpp"
+#include "Common/Queue/CYFrameQueue.hpp"
+
+CYPLAYER_NAMESPACE_BEGIN
+
+class CYDecoder
+{
+public:
+    CYDecoder();
+    virtual ~CYDecoder();
+
+public:
+    int Init(AVCodecContext* pAVCtx, SharePtr<CYPacketQueue>& ptrQueue, SharePtr<CYCondition>& ptrCond);
+    int  DecodeFrame(AVFrame* pFrame, AVSubtitle* pSub, int ndecoderReorderPts);
+    void Destroy();
+    int  Start(std::function<void()> fun, const char* pThreadName);
+    void Abort(CYFrameQueue& objQueue);
+    
+    void WaitStart()
+    {
+        m_objStartDecodeCond.Wait();
+    }
+
+    void NotifyStart()
+    {
+        m_objStartDecodeCond.NotifyOne();
+    }
+
+public:
+    AVPacketPtr m_ptrPkt;
+    SharePtr<CYPacketQueue> m_ptrQueue;
+    AVCodecContextPtr m_ptrAVCtx;
+    int m_nPktSerial = 0;
+    int m_nFinished = 0;
+    int m_nPacketPending = 0;
+    SharePtr<CYCondition> m_ptrEmptyCond;
+    int64_t m_nStartPts = 0;
+    AVRational m_objStartPtsTb = { 0 };
+    int64_t m_nNextPts = 0;
+    AVRational m_objNextPtsTb = {0};
+    std::thread m_thread;
+    CYCondition m_objStartDecodeCond;
+};
+
+CYPLAYER_NAMESPACE_END
+
+#endif // __CY_DECODER_HPP__

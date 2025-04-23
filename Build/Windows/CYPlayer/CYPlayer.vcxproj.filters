@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Inc">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Inc\CYPlayer">
+      <UniqueIdentifier>{42f67d36-731a-4fb1-ab9d-106879a5fce8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter">
+      <UniqueIdentifier>{84ce47f0-65a9-40c4-b294-b75d5d997f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter\Common">
+      <UniqueIdentifier>{d3062c58-bddf-43ab-9e51-1e3c1922bb7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter\Context">
+      <UniqueIdentifier>{4aba7c4d-b15a-42fa-8e26-54f8a37b526f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter\DecodeFilter">
+      <UniqueIdentifier>{38e576a0-3931-4805-8e47-7f226692bf59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter\DemuxFilter">
+      <UniqueIdentifier>{97e21fea-1ab7-4413-ac51-6344770e6d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter\ProcessFilter">
+      <UniqueIdentifier>{7c64a1de-6fa7-429e-a560-49515ba28334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter\RenderFilter">
+      <UniqueIdentifier>{4e9b2f75-459c-42a1-80b1-42e5151d7569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\ChainFilter\SourceFilter">
+      <UniqueIdentifier>{9a7538db-96ef-4db1-bf58-ed3c5b3a69e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Common">
+      <UniqueIdentifier>{9aa12935-0a94-40ce-955d-67bf3af0573a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Logger">
+      <UniqueIdentifier>{c24c2bb7-69c9-4c34-944a-ab4bee91237a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\PipeLine">
+      <UniqueIdentifier>{8967e9a3-35af-44ef-a6b1-b6b80bca12d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Common\Time">
+      <UniqueIdentifier>{3b0e7a8d-e618-4352-b467-b3c922bd4943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Common\Thread">
+      <UniqueIdentifier>{52075ef4-24f7-47b1-8a36-69d7bbbd36f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Common\Structure">
+      <UniqueIdentifier>{e8aee984-f494-4dad-a216-7407d24163ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Common\Queue">
+      <UniqueIdentifier>{23bd8f03-a9fe-48d5-8da2-4cae35167c83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Common\Message">
+      <UniqueIdentifier>{eb01db64-826e-4403-8713-c171dbc81bcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Common\Exception">
+      <UniqueIdentifier>{689e1a6f-1a85-4d95-b101-fd1cad947f7e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Src\ChainFilter\ChainFilterManager.cpp">
+      <Filter>Src\ChainFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\CYPlayerFactory.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\CYPlayerImpl.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\PipeLine\PipeLine.cpp">
+      <Filter>Src\PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Logger\CYDebugString.cpp">
+      <Filter>Src\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Logger\CYLoggerManager.cpp">
+      <Filter>Src\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Common\Time\CYTimeStamps.cpp">
+      <Filter>Src\Common\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Common\Thread\CYCondition.cpp">
+      <Filter>Src\Common\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Common\Structure\CYStringUtils.cpp">
+      <Filter>Src\Common\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Common\Queue\CYFrameQueue.cpp">
+      <Filter>Src\Common\Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Common\Queue\CYPacketQueue.cpp">
+      <Filter>Src\Common\Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Common\Exception\CYBaseException.cpp">
+      <Filter>Src\Common\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\Common\Message\CYBaseMessage.cpp">
+      <Filter>Src\Common\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\cmdutils.c">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\CYAudioFilters.cpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\CYBaseFilter.cpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\CYDecoder.cpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\CYHWAccel.cpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\CYMediaClock.cpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\CYRenderer.cpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Common\CYVideoFilters.cpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\Context\CYMediaContext.cpp">
+      <Filter>Src\ChainFilter\Context</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\DecodeFilter\CYAudioDecodeFilter.cpp">
+      <Filter>Src\ChainFilter\DecodeFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\DecodeFilter\CYSubTitleDecodeFilter.cpp">
+      <Filter>Src\ChainFilter\DecodeFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\DecodeFilter\CYVideoDecodeFilter.cpp">
+      <Filter>Src\ChainFilter\DecodeFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\DemuxFilter\CYDemuxFilter.cpp">
+      <Filter>Src\ChainFilter\DemuxFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\SourceFilter\CYSourceFilter.cpp">
+      <Filter>Src\ChainFilter\SourceFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\RenderFilter\CYAudioRenderFilter.cpp">
+      <Filter>Src\ChainFilter\RenderFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\RenderFilter\CYVideoRenderFilter.cpp">
+      <Filter>Src\ChainFilter\RenderFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Src\ChainFilter\ProcessFilter\CYProcessFilter.cpp">
+      <Filter>Src\ChainFilter\ProcessFilter</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Inc\CYPlayer\CYPlayerDefine.hpp">
+      <Filter>Inc\CYPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Inc\CYPlayer\CYPlayerFactory.hpp">
+      <Filter>Inc\CYPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Inc\CYPlayer\ICYPlayer.hpp">
+      <Filter>Inc\CYPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\ChainFilterManager.hpp">
+      <Filter>Src\ChainFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\CYPlayerImpl.hpp">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\CYPlayerPrivDefine.hpp">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\PipeLine\PipeLine.hpp">
+      <Filter>Src\PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Logger\CYDebugString.hpp">
+      <Filter>Src\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Logger\CYLoggerManager.hpp">
+      <Filter>Src\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\CYCommonDefine.hpp">
+      <Filter>Src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\CYFFmpegDefine.hpp">
+      <Filter>Src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Time\CYTimeStamps.hpp">
+      <Filter>Src\Common\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Thread\CYCondition.hpp">
+      <Filter>Src\Common\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Structure\CYStringUtils.hpp">
+      <Filter>Src\Common\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Queue\CYFrameQueue.hpp">
+      <Filter>Src\Common\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Queue\CYPacketQueue.hpp">
+      <Filter>Src\Common\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Exception\CYBaseException.hpp">
+      <Filter>Src\Common\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Exception\CYException.hpp">
+      <Filter>Src\Common\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\Common\Message\CYBaseMessage.hpp">
+      <Filter>Src\Common\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\cmdutils.h">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\CYAudioFilters.hpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\CYBaseFilter.hpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\CYDecoder.hpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\CYHWAccel.hpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\CYMediaClock.hpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\CYRenderer.hpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Common\CYVideoFilters.hpp">
+      <Filter>Src\ChainFilter\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\Context\CYMediaContext.hpp">
+      <Filter>Src\ChainFilter\Context</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\DecodeFilter\CYAudioDecodeFilter.hpp">
+      <Filter>Src\ChainFilter\DecodeFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\DecodeFilter\CYSubTitleDecodeFilter.hpp">
+      <Filter>Src\ChainFilter\DecodeFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\DecodeFilter\CYVideoDecodeFilter.hpp">
+      <Filter>Src\ChainFilter\DecodeFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\DemuxFilter\CYDemuxFilter.hpp">
+      <Filter>Src\ChainFilter\DemuxFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\SourceFilter\CYSourceFilter.hpp">
+      <Filter>Src\ChainFilter\SourceFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\RenderFilter\CYAudioRenderFilter.hpp">
+      <Filter>Src\ChainFilter\RenderFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\RenderFilter\CYVideoRenderFilter.hpp">
+      <Filter>Src\ChainFilter\RenderFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Src\ChainFilter\ProcessFilter\CYProcessFilter.hpp">
+      <Filter>Src\ChainFilter\ProcessFilter</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
