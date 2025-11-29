@@ -29,6 +29,8 @@
 
 **CYPlayer** is a lightweight, cross-platform media player SDK implemented in modern C++11, based on FFmpeg and SDL. It adopts the **Chain of Responsibility** design pattern, offering a modular and extensible playback architecture suitable for applications requiring high-quality media playback capabilities across various platforms.
 
+![CYPlayerTest](CYPlayerTest.png)
+
 ## 特性 | Features
 
 - **模块化架构** - 采用责任链模式，各组件职责明确，易于扩展
