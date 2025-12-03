@@ -40,7 +40,6 @@
   * LICENSE:  Expat/MIT License, See Copyright Notice at the begin of this file.
   */
 
-
 #ifndef __CY_VIDEO_DECODE_FILTER_HPP__
 #define __CY_VIDEO_DECODE_FILTER_HPP__
 
@@ -66,7 +65,7 @@ public:
 
     virtual int16_t ProcessPacket(SharePtr<CYMediaContext>& ptrContext, AVPacketPtr& ptrPacket) override;
     virtual int16_t ProcessFrame(SharePtr<CYMediaContext>& ptrContext, AVFramePtr& ptrFrame) override;
-    
+
 private:
     void OnEntry();
     int GetVideoFrame(AVFrame* frame);
@@ -74,6 +73,7 @@ private:
     int GetMasterSyncType(SharePtr<CYMediaContext>& ptrContext);
 
 private:
+    std::atomic_bool m_bStop = false;
     std::thread m_thread;
     SharePtr<EPlayerParam> m_ptrParam;
     SharePtr<CYMediaContext> m_ptrContext;

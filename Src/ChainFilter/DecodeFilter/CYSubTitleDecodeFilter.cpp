@@ -24,6 +24,7 @@ int16_t CYSubTitleDecodeFilter::UnInit()
 
 int16_t CYSubTitleDecodeFilter::Start(SharePtr<CYMediaContext>& ptrContext)
 {
+    m_bStop = false;
     m_ptrContext = ptrContext;
     std::function<void()> func = std::bind(&CYSubTitleDecodeFilter::OnEntry, this);
     m_ptrContext->subdec.Start(func, "VideoDecodeThread");
@@ -32,6 +33,7 @@ int16_t CYSubTitleDecodeFilter::Start(SharePtr<CYMediaContext>& ptrContext)
 
 int16_t CYSubTitleDecodeFilter::Stop(SharePtr<CYMediaContext>& ptrContext)
 {
+    m_bStop = true;
     ptrContext->subdec.Abort(ptrContext->subpq);
     ptrContext->subdec.Destroy();
     return CYBaseFilter::Stop(ptrContext);
@@ -60,6 +62,9 @@ int16_t CYSubTitleDecodeFilter::ProcessFrame(SharePtr<CYMediaContext>& ptrContex
 void CYSubTitleDecodeFilter::OnEntry()
 {
     m_ptrContext->subdec.WaitStart();
+
+    if (m_bStop) return;
+
     CYFrame* sp = nullptr;
     int got_subtitle;
     double pts;

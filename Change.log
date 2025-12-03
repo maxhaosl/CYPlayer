@@ -1,16 +1,36 @@
-CYPlayer V1.0.0 features:
-- 🧩 **Modular architecture** using the Chain of Responsibility pattern
-- 🎞️ **Broad media format support** via FFmpeg
-- 💻 **Cross-platform**: Works on Windows, macOS, Linux, Android, IOS, UE, Unity.
-- 🖼️ **High-performance rendering** using SDL
-- ⚙️ **Pure C++11 implementation**: No external bindings or frameworks
-- 🔧 **Easy to extend**: Plug in custom filters or replace core components
+CYPlayer 更新日志 | Change Log
+=====================================
+
+## 📅 2024-12-03 - 最新更新 | Latest Updates
+
+### ✨ 新增功能 | New Features
+- 🖼️ **新增 SetDisplaySize 接口 | Added SetDisplaySize Interface** - 支持动态调整播放绘制窗口大小，提供更灵活的显示控制 | Supports dynamic adjustment of playback rendering window size, providing more flexible display control
+
+### 🐛 问题修复 | Bug Fixes
+- 🔄 **完善播放器状态回调逻辑 | Improved Player State Callback Logic** - 优化状态管理，确保回调准确性和及时性 | Optimized state management, ensuring callback accuracy and timeliness
+- 💥 **修复单音频文件播放退出可能的崩溃问题 | Fixed Potential Crash When Exiting Audio-Only Playback** - 提升播放器稳定性，解决音频播放时的异常退出 | Enhanced player stability, resolved abnormal exit during audio playback
+- 📍 **修复播放进度回调问题 | Fixed Playback Progress Callback Issue** - 确保播放位置信息准确传递，改善用户体验 | Ensured accurate playback position information transmission, improved user experience
+
+### 🔧 技术改进 | Technical Improvements
+- 🛡️ **增强异常处理机制 | Enhanced Exception Handling Mechanism** - 提升系统稳定性和错误恢复能力 | Improved system stability and error recovery capability
+- 📊 **优化回调事件系统 | Optimized Callback Event System** - 提高事件处理效率和可靠性 | Enhanced event processing efficiency and reliability
+- 🎵 **改进音频播放流程 | Improved Audio Playback Process** - 优化音频数据处理和输出流程 | Optimized audio data processing and output workflow
+
+---
+
+CYPlayer V1.0.0 特性 | Features:
+- 🧩 **模块化架构 | Modular Architecture** - 使用责任链模式 | Using the Chain of Responsibility pattern
+- 🎞️ **广泛的媒体格式支持 | Broad Media Format Support** - 通过 FFmpeg 实现 | Implemented via FFmpeg
+- 💻 **跨平台支持 | Cross-platform Support** - 支持 Windows、macOS、Linux、Android、iOS、UE、Unity | Works on Windows, macOS, Linux, Android, iOS, UE, Unity
+- 🖼️ **高性能渲染 | High-performance Rendering** - 使用 SDL 实现 | Implemented using SDL
+- ⚙️ **纯 C++11 实现 | Pure C++11 Implementation** - 无外部绑定或框架依赖 | No external bindings or frameworks
+- 🔧 **易于扩展 | Easy to Extend** - 可插入自定义过滤器或替换核心组件 | Plug in custom filters or replace core components
 
 +-------------+ +-------------+ +--------------+ +--------------+ +--------------+ 
 | SourceFilter| --> | DemuxFilter | --> | DecodeFilter | --> | ProcessFilter| --> | RenderFilter | 
 +-------------+ +-------------+ +--------------+ +--------------+ +--------------+
 
-Included plugins:
+**包含的插件 | Included Plugins:**
 
-1.ffmpeg.
-2.SDL2.
+1. **FFmpeg** - 多媒体处理框架 | Multimedia Processing Framework
+2. **SDL2** - 简单直接媒体层 | Simple DirectMedia Layer

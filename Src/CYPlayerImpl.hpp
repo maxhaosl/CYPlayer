@@ -81,6 +81,11 @@ public:
     virtual int16_t  Stop() override;
 
     /**
+     * Set Display Size.
+     */
+    virtual int16_t SetDisplaySize(int32_t nWidth, int32_t nHeight) override;
+
+    /**
      * Player State
      */
     virtual EStateType GetState() const override;

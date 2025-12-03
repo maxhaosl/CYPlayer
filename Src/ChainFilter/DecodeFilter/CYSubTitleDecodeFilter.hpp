@@ -40,7 +40,6 @@
   * LICENSE:  Expat/MIT License, See Copyright Notice at the begin of this file.
   */
 
-
 #ifndef __CY_SUBTITLE_DECODE_FILTER_HPP__
 #define __CY_SUBTITLE_DECODE_FILTER_HPP__
 
@@ -71,6 +70,7 @@ private:
     void OnEntry();
 
 private:
+    std::atomic_bool m_bStop = false;
     std::thread m_thread;
     SharePtr<EPlayerParam> m_ptrParam;
     SharePtr<CYMediaContext> m_ptrContext;

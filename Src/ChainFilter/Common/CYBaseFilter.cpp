@@ -81,6 +81,15 @@ int16_t CYBaseFilter::Resume()
     return ERR_SUCESS;
 }
 
+int16_t CYBaseFilter::SetDisplaySize(int nWidth, int nHeight)
+{
+    if (m_ptrNext)
+    {
+        return m_ptrNext->SetDisplaySize(nWidth, nHeight);
+    }
+    return ERR_SUCESS;
+}
+
 int16_t CYBaseFilter::ProcessPacket(SharePtr<CYMediaContext>& ptrContext, AVPacketPtr& ptrPacket)
 {
     if (m_ptrNext)

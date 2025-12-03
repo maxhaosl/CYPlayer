@@ -40,7 +40,6 @@
   * LICENSE:  Expat/MIT License, See Copyright Notice at the begin of this file.
   */
 
-
 #ifndef __CY_FFMPEG_DEFINE_HPP__
 #define __CY_FFMPEG_DEFINE_HPP__
 
@@ -281,7 +280,6 @@ struct PointerChannelDel
             Fn(p);
             delete p;
         }
-            
     }
 };
 

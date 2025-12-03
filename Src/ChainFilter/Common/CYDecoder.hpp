@@ -40,7 +40,6 @@
   * LICENSE:  Expat/MIT License, See Copyright Notice at the begin of this file.
   */
 
-
 #ifndef __CY_DECODER_HPP__
 #define __CY_DECODER_HPP__
 
@@ -52,6 +51,7 @@
 
 CYPLAYER_NAMESPACE_BEGIN
 
+class CYMediaContext;
 class CYDecoder
 {
 public:
@@ -59,12 +59,13 @@ public:
     virtual ~CYDecoder();
 
 public:
-    int Init(AVCodecContext* pAVCtx, SharePtr<CYPacketQueue>& ptrQueue, SharePtr<CYCondition>& ptrCond);
+    int  Init(SharePtr<CYMediaContext>& ptrContext, AVCodecContext* pAVCtx, SharePtr<CYPacketQueue>& ptrQueue, SharePtr<CYCondition>& ptrCond);
     int  DecodeFrame(AVFrame* pFrame, AVSubtitle* pSub, int ndecoderReorderPts);
     void Destroy();
     int  Start(std::function<void()> fun, const char* pThreadName);
     void Abort(CYFrameQueue& objQueue);
-    
+    AVCodecContext* GetCodecContent();
+
     void WaitStart()
     {
         m_objStartDecodeCond.Wait();
@@ -86,9 +87,10 @@ public:
     int64_t m_nStartPts = 0;
     AVRational m_objStartPtsTb = { 0 };
     int64_t m_nNextPts = 0;
-    AVRational m_objNextPtsTb = {0};
+    AVRational m_objNextPtsTb = { 0 };
     std::thread m_thread;
     CYCondition m_objStartDecodeCond;
+    SharePtr<CYMediaContext> m_ptrContext;
 };
 
 CYPLAYER_NAMESPACE_END

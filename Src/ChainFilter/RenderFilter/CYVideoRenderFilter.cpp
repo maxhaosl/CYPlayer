@@ -175,6 +175,69 @@ int16_t CYVideoRenderFilter::Resume()
     return CYBaseFilter::Resume();
 }
 
+int16_t CYVideoRenderFilter::SetDisplaySize(int nWidth, int nHeight)
+{
+    m_nScreenWidth = nWidth;
+    m_nScreenHeight = nHeight;
+
+    if (m_ptrWindow)
+    {
+        SDL_SetWindowSize(m_ptrWindow.get(), nWidth, nHeight);
+
+        m_ptrRenderer = SDLRendererPtr(SDL_CreateRenderer(m_ptrWindow.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
+        if (!m_ptrRenderer)
+        {
+            av_log(nullptr, AV_LOG_WARNING, "Failed to initialize a hardware accelerated renderer: %s\n", SDL_GetError());
+            //renderer = SDL_CreateRenderer(window, -1, 0);
+            m_ptrRenderer = SDLRendererPtr(SDL_CreateRenderer(m_ptrWindow.get(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_SOFTWARE));
+            if (!m_ptrRenderer)
+            {
+                av_log(nullptr, AV_LOG_WARNING, "Failed to create software renderer.: %s\n", SDL_GetError());
+            }
+        }
+        if (m_ptrRenderer)
+        {
+            if (!SDL_GetRendererInfo(m_ptrRenderer.get(), &m_objRendererInfo))
+                av_log(nullptr, AV_LOG_VERBOSE, "Initialized %s renderer.\n", m_objRendererInfo.name);
+        }
+        if (!m_ptrRenderer || !m_objRendererInfo.num_texture_formats)
+        {
+            av_log(nullptr, AV_LOG_FATAL, "Failed to create window or renderer: %s", SDL_GetError());
+            return ERR_SDL_CREATE_RENDERDER_FAILED;
+        }
+    }
+    else if (m_ptrContext && m_ptrContext->ptrWindow)
+    {
+        SDL_SetWindowSize(m_ptrContext->ptrWindow.get(), nWidth, nHeight);
+
+        m_ptrRenderer = SDLRendererPtr(SDL_CreateRenderer(m_ptrContext->ptrWindow.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
+        if (!m_ptrRenderer)
+        {
+            av_log(nullptr, AV_LOG_WARNING, "Failed to initialize a hardware accelerated renderer: %s\n", SDL_GetError());
+            //renderer = SDL_CreateRenderer(window, -1, 0);
+            m_ptrRenderer = SDLRendererPtr(SDL_CreateRenderer(m_ptrContext->ptrWindow.get(), -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_SOFTWARE));
+            if (!m_ptrRenderer)
+            {
+                av_log(nullptr, AV_LOG_WARNING, "Failed to create software renderer.: %s\n", SDL_GetError());
+            }
+        }
+        if (m_ptrRenderer)
+        {
+            if (!SDL_GetRendererInfo(m_ptrRenderer.get(), &m_objRendererInfo))
+                av_log(nullptr, AV_LOG_VERBOSE, "Initialized %s renderer.\n", m_objRendererInfo.name);
+        }
+        if (!m_ptrRenderer || !m_objRendererInfo.num_texture_formats)
+        {
+            av_log(nullptr, AV_LOG_FATAL, "Failed to create window or renderer: %s", SDL_GetError());
+            return ERR_SDL_CREATE_RENDERDER_FAILED;
+        }
+
+        if (m_ptrRenderer) m_ptrContext->ptrRenderer = std::move(m_ptrRenderer);
+    }
+
+    return CYBaseFilter::SetDisplaySize(nWidth, nHeight);
+}
+
 int16_t CYVideoRenderFilter::ProcessPacket(SharePtr<CYMediaContext>& ptrContext, AVPacketPtr& ptrPacket)
 {
     return CYBaseFilter::ProcessPacket(ptrContext, ptrPacket);
@@ -321,7 +384,6 @@ int16_t CYVideoRenderFilter::SetAspectRatio(float fRatio)
 {
     return ERR_SUCESS;
 }
-
 
 int16_t CYVideoRenderFilter::SetMute(bool bMute)
 {
@@ -1158,15 +1220,34 @@ void CYVideoRenderFilter::RefreshLoopWaitEvent(SharePtr<CYMediaContext>& ptrCont
         {
             if (m_nLastMircoSecond == 0)
                 m_nLastMircoSecond = m_ptrContext->extclk.GetClock() * 1000;
-            
+
             int64_t nMicroSecond = m_ptrContext->extclk.GetClock() * 1000;
             if (nMicroSecond - m_nLastMircoSecond < 0)
             {
                 m_nLastMircoSecond = nMicroSecond;
             }
-            if (nMicroSecond - m_nLastMircoSecond > 200)
+
+            if (!m_bPlayOver && (abs(nMicroSecond - m_ptrContext->nFileDuration) <= 100) && m_ptrContext->bEof)
             {
-                m_ptrContext->funPositionCallBack(nMicroSecond > m_ptrContext->nFileDuration ? m_ptrContext->nFileDuration : nMicroSecond, m_ptrContext->nFileDuration);
+                m_bPlayOver = true;
+                if (m_ptrContext->funStateCallBack) m_ptrContext->funStateCallBack(TYPE_STATUS_COMPLETED);
+            }
+            else if (!m_ptrContext->bEof)
+            {
+                m_bPlayOver = false;
+            }
+
+            if (nMicroSecond - m_nLastMircoSecond > 100)
+            {
+                if (m_bPlayOver)
+                {
+                    m_ptrContext->funPositionCallBack(m_ptrContext->nFileDuration, m_ptrContext->nFileDuration);
+                }
+                else
+                {
+                    m_ptrContext->funPositionCallBack(nMicroSecond > m_ptrContext->nFileDuration ? m_ptrContext->nFileDuration : nMicroSecond, m_ptrContext->nFileDuration);
+                }
+
                 m_nLastMircoSecond = nMicroSecond;
             }
         }
@@ -1247,7 +1328,7 @@ void StreamClose(SharePtr<CYMediaContext>& ptrContext)
     StreamComponentClose(ptrContext, ptrContext->nSubtitleStreamIndex);
     ptrContext->ptrIC.reset();
 
-    if(ptrContext->ptrVideoQueue) ptrContext->ptrVideoQueue->Destroy();
+    if (ptrContext->ptrVideoQueue) ptrContext->ptrVideoQueue->Destroy();
     if (ptrContext->ptrAudioQueue) ptrContext->ptrAudioQueue->Destroy();
     if (ptrContext->ptrSubTitleQueue) ptrContext->ptrSubTitleQueue->Destroy();
 
@@ -1684,7 +1765,7 @@ void CYVideoRenderFilter::OnEntry()
             if (m_ptrParam->nSeekByBytes || m_ptrContext->ptrIC->duration <= 0)
             {
                 uint64_t nSize = avio_size(m_ptrContext->ptrIC->pb);
-                StreamSeek(m_ptrContext, nSize* x / m_ptrContext->nShowWidth, 0, 1);
+                StreamSeek(m_ptrContext, nSize * x / m_ptrContext->nShowWidth, 0, 1);
             }
             else
             {

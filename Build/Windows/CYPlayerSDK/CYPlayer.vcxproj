@@ -71,12 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\..\Bin\$(Configuration)\$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\..\Bin\obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\..\Bin\$(Configuration)\$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\..\Bin\obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\..\Bin\$(Configuration)\$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\..\Bin\obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\..\Bin\$(Configuration)\$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)..\..\Bin\obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -86,14 +94,15 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\Src\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\..\..\ThirdParty\ffmpeg\lib\Debug\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Src\ThirdParty\ffmpeg\lib\Debug\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libavdeviced.lib;libavfilterd.lib;libavformatd.lib;libavcodecd.lib;libpostprocd.lib;libswresampled.lib;libswscaled.lib;libavutild.lib;libsdl2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -106,7 +115,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\Src\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -116,7 +125,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>libavdevice.lib;libavfilter.lib;libavformat.lib;libavcodec.lib;libpostproc.lib;libswresample.lib;libswscale.lib;libavutil.lib;libsdl2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\ThirdParty\ffmpeg\lib\Release\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Src\ThirdParty\ffmpeg\lib\Release\x86</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,15 +136,15 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\Src\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>libavdevice.lib;libavfilter.lib;libavformat.lib;libavcodec.lib;libpostproc.lib;libswresample.lib;libswscale.lib;libavutil.lib;libsdl2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\ThirdParty\ffmpeg\lib\Debug\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libavdeviced.lib;libavfilterd.lib;libavformatd.lib;libavcodecd.lib;libpostprocd.lib;libswresampled.lib;libswscaled.lib;libavutild.lib;libsdl2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\Src\ThirdParty\ffmpeg\lib\Debug\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,7 +157,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../../../Inc;../../../Src;..\..\..\Src\ThirdParty\ffmpeg\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -158,7 +167,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>libavdevice.lib;libavfilter.lib;libavformat.lib;libavcodec.lib;libpostproc.lib;libswresample.lib;libswscale.lib;libavutil.lib;libsdl2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\ThirdParty\ffmpeg\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Src\ThirdParty\ffmpeg\lib\Release\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

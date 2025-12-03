@@ -24,6 +24,7 @@ int16_t CYAudioDecodeFilter::UnInit()
 
 int16_t CYAudioDecodeFilter::Start(SharePtr<CYMediaContext>& ptrContext)
 {
+    m_bStop = false;
     m_ptrContext = ptrContext;
     std::function<void()> func = std::bind(&CYAudioDecodeFilter::OnEntry, this);
     m_ptrContext->auddec.Start(func, "AudioDecodeThread");
@@ -32,6 +33,7 @@ int16_t CYAudioDecodeFilter::Start(SharePtr<CYMediaContext>& ptrContext)
 
 int16_t CYAudioDecodeFilter::Stop(SharePtr<CYMediaContext>& ptrContext)
 {
+    m_bStop = true;
     ptrContext->auddec.Abort(ptrContext->sampq);
     ptrContext->auddec.Destroy();
     return CYBaseFilter::Stop(ptrContext);
@@ -69,6 +71,8 @@ int CYAudioDecodeFilter::CmpAudioFmts(enum AVSampleFormat eFmt, int64_t nChannel
 void CYAudioDecodeFilter::OnEntry()
 {
     m_ptrContext->auddec.WaitStart();
+
+    if (m_bStop) return;
 
     AVFrame* pFrame = av_frame_alloc();
     CYFrame* af = nullptr;
@@ -226,7 +230,6 @@ int SynchronizeAudio(SharePtr<CYMediaContext>& ptrContext, int nNbSamples)
         double fDiff, fAvgDiff;
         int nMinNbSamples, nMaxNbSamples;
 
-        
         fDiff = ptrContext->audclk.GetClock() - GetMasterClock(ptrContext);
 
         if (!isnan(fDiff) && fabs(fDiff) < AV_NOSYNC_THRESHOLD)
@@ -263,7 +266,6 @@ int SynchronizeAudio(SharePtr<CYMediaContext>& ptrContext, int nNbSamples)
 
     return nWantedNbSamples;
 }
-
 
 /**
  * Decode one audio frame and return its uncompressed size.
@@ -302,6 +304,14 @@ int AudioDecodeFrame(SharePtr<CYMediaContext>& ptrContext)
     if (af->pFrame->format == -1)
         return -1;
 
+#ifdef DEBUG
+    //////////////////////////////////////////////////////////////////////////
+    AVRational tb = ptrContext->auddec.GetCodecContent()->time_base;
+    double pts_seconds = af->pFrame->pts * av_q2d(tb);
+    av_log(nullptr, AV_LOG_INFO, "decode audio time: %.3f sec\n", pts_seconds);
+    //////////////////////////////////////////////////////////////////////////
+#endif
+
     data_size = av_samples_get_buffer_size(NULL, af->pFrame->ch_layout.nb_channels,
         af->pFrame->nb_samples,
         (AVSampleFormat)af->pFrame->format, 1);
@@ -331,7 +341,7 @@ int AudioDecodeFrame(SharePtr<CYMediaContext>& ptrContext)
             ptrContext->ptrSwrCtx.reset();
             return -1;
         }
-        
+
         if (av_channel_layout_copy(&ptrContext->objAudioSrc.ch_layout, &af->pFrame->ch_layout) < 0)
             return -1;
         ptrContext->objAudioSrc.freq = af->pFrame->sample_rate;
@@ -360,7 +370,10 @@ int AudioDecodeFrame(SharePtr<CYMediaContext>& ptrContext)
                 return -1;
             }
         }
+
+        if (!audio_buf1) ptrContext->nAudioBuf1Size = 0;
         av_fast_malloc(&audio_buf1, &ptrContext->nAudioBuf1Size, out_size);
+
         if (!audio_buf1)
             return AVERROR(ENOMEM);
 
@@ -397,9 +410,7 @@ int AudioDecodeFrame(SharePtr<CYMediaContext>& ptrContext)
 #ifdef DEBUG
     {
         static double last_clock;
-        printf("audio: delay=%0.3f clock=%0.3f clock0=%0.3f\n",
-            ptrContext->fAudioClock - last_clock,
-            ptrContext->fAudioClock, audio_clock0);
+        av_log(nullptr, AV_LOG_INFO, "audio: delay=%0.3f clock=%0.3f clock0=%0.3f\n", ptrContext->fAudioClock - last_clock, ptrContext->fAudioClock, audio_clock0);
         last_clock = ptrContext->fAudioClock;
     }
 #endif

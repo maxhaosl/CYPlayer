@@ -65,6 +65,14 @@ int16_t CYPlayerImpl::Stop()
 }
 
 /**
+ * Set Display Size.
+ */
+int16_t CYPlayerImpl::SetDisplaySize(int32_t nWidth, int32_t nHeight)
+{
+    return m_ptrChainFilterManager->SetDisplaySize(nWidth, nHeight);
+}
+
+/**
 * Player State
 */
 EStateType CYPlayerImpl::GetState() const

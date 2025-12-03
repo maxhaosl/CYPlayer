@@ -13,8 +13,9 @@ CYDecoder::~CYDecoder()
 {
 }
 
-int CYDecoder::Init(AVCodecContext* pAVCtx, SharePtr<CYPacketQueue>& ptrQueue, SharePtr<CYCondition>& ptrCond)
+int CYDecoder::Init(SharePtr<CYMediaContext>& ptrContext, AVCodecContext* pAVCtx, SharePtr<CYPacketQueue>& ptrQueue, SharePtr<CYCondition>& ptrCond)
 {
+    m_ptrContext = ptrContext;
     m_ptrPkt = AVPacketPtrCreate();// av_packet_alloc();
     if (!m_ptrPkt)
         return AVERROR(ENOMEM);
@@ -142,6 +143,22 @@ int CYDecoder::DecodeFrame(AVFrame* pFrame, AVSubtitle* pSub, int ndecoderReorde
                 fd->pkt_pos = m_ptrPkt->pos;
             }
 
+#ifdef DEBUG
+            //---------------------------
+            int64_t pkt_ts = m_ptrPkt->pts == AV_NOPTS_VALUE ? m_ptrPkt->dts : m_ptrPkt->pts;
+
+            double fTimeBaseSec = av_q2d(m_ptrContext->ptrIC->streams[m_ptrPkt->stream_index]->time_base);
+            int64_t stream_start = (m_ptrContext->ptrIC->streams[m_ptrPkt->stream_index]->start_time != AV_NOPTS_VALUE) ? m_ptrContext->ptrIC->streams[m_ptrPkt->stream_index]->start_time : 0;
+            int64_t start_time_offset_us = (m_ptrContext->nStartTime != AV_NOPTS_VALUE) ? m_ptrContext->nStartTime : 0;
+            double fDurationSec = (m_ptrContext->nDuration != AV_NOPTS_VALUE) ? (double)m_ptrContext->nDuration / 1000000.0 : -1.0;
+
+            double fPktTimeSec = (pkt_ts - stream_start) * fTimeBaseSec;
+            double fStartTimeOffsetSec = (double)start_time_offset_us / 1000000.0;
+            //---------------------------
+
+            av_log(nullptr, AV_LOG_INFO, "avcodec send packet fPktTimeSec: %.3f, fStartTimeOffsetSec: %.3f, fDurationSec: %.3f\n", fPktTimeSec, fStartTimeOffsetSec, fDurationSec);
+#endif
+
             if (avcodec_send_packet(m_ptrAVCtx.get(), m_ptrPkt.get()) == AVERROR(EAGAIN))
             {
                 av_log(m_ptrAVCtx.get(), AV_LOG_ERROR, "Receive_frame and send_packet both returned EAGAIN, which is an API violation.\n");
@@ -181,6 +198,11 @@ void CYDecoder::Abort(CYFrameQueue& objQueue)
         m_thread.join();
     }
     if (m_ptrQueue) m_ptrQueue->Flush();
+}
+
+AVCodecContext* CYDecoder::GetCodecContent()
+{
+    return m_ptrAVCtx.get();
 }
 
 CYPLAYER_NAMESPACE_END

@@ -83,6 +83,11 @@ public:
     virtual int16_t  Stop() = 0;
 
     /**
+     * Set Display Size.
+     */
+    virtual int16_t SetDisplaySize(int32_t nWidth, int32_t nHeight) = 0;
+
+    /**
      * Player State
      */
     virtual EStateType GetState() const = 0;

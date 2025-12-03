@@ -190,10 +190,10 @@ void CYDemuxFilter::OnEntry()
 
     m_ptrContext->fMaxFrameDuration = (pIC->iformat->flags & AVFMT_TS_DISCONT) ? 10.0 : 3600.0;
 
-//     if (!m_pszWindowTitle && (t = av_dict_get(pIC->metadata, "title", nullptr, 0)))
-//         m_pszWindowTitle = av_asprintf("%s - %s", t->value, m_ptrContext->pszFileName);
+    //     if (!m_pszWindowTitle && (t = av_dict_get(pIC->metadata, "title", nullptr, 0)))
+    //         m_pszWindowTitle = av_asprintf("%s - %s", t->value, m_ptrContext->pszFileName);
 
-    /* if seeking requested, we execute it */
+        /* if seeking requested, we execute it */
     if (m_ptrContext->nStartTime != AV_NOPTS_VALUE)
     {
         int64_t timestamp;
@@ -275,6 +275,7 @@ void CYDemuxFilter::OnEntry()
     {
         av_log(nullptr, AV_LOG_FATAL, "Failed to open file '%s' or configure filtergraph\n", m_ptrContext->pszFileName);
         ret = -1;
+        if (m_ptrContext->funStateCallBack) m_ptrContext->funStateCallBack(TYPE_STATUS_ERROR);
         goto fail;
     }
 
@@ -434,7 +435,7 @@ void CYDemuxFilter::OnEntry()
         pkt_ts = ptrPkt->pts == AV_NOPTS_VALUE ? ptrPkt->dts : ptrPkt->pts;
         pkt_in_play_range = m_ptrContext->nDuration == AV_NOPTS_VALUE || (pkt_ts - (stream_start_time != AV_NOPTS_VALUE ? stream_start_time : 0)) *
             av_q2d(pIC->streams[ptrPkt->stream_index]->time_base) - (double)(m_ptrContext->nStartTime != AV_NOPTS_VALUE ? m_ptrContext->nStartTime : 0) / 1000000 <= ((double)m_ptrContext->nDuration / 1000000);
-       
+
         //---------------------------
         double fTimeBaseSec = av_q2d(pIC->streams[ptrPkt->stream_index]->time_base);
         int64_t stream_start = (pIC->streams[ptrPkt->stream_index]->start_time != AV_NOPTS_VALUE) ? pIC->streams[ptrPkt->stream_index]->start_time : 0;
@@ -444,21 +445,27 @@ void CYDemuxFilter::OnEntry()
         double fPktTimeSec = (pkt_ts - stream_start) * fTimeBaseSec;
         double fStartTimeOffsetSec = (double)start_time_offset_us / 1000000.0;
         //---------------------------
-        
+
         if (ptrPkt->stream_index == m_ptrContext->nAudioStreamIndex && pkt_in_play_range)
         {
             m_ptrContext->ptrAudioQueue->Put(ptrPkt);
+//#ifdef DEBUG
             av_log(nullptr, AV_LOG_INFO, "read audio fPktTimeSec: %.3f, fStartTimeOffsetSec: %.3f, fDurationSec: %.3f\n", fPktTimeSec, fStartTimeOffsetSec, fDurationSec);
+//#endif
         }
         else if (ptrPkt->stream_index == m_ptrContext->nVideoStreamIndex && pkt_in_play_range && !(m_ptrContext->pVideoStream->disposition & AV_DISPOSITION_ATTACHED_PIC))
         {
             m_ptrContext->ptrVideoQueue->Put(ptrPkt);
+//#ifdef DEBUG
             av_log(nullptr, AV_LOG_INFO, "read video fPktTimeSec: %.3f, fStartTimeOffsetSec: %.3f, fDurationSec: %.3f\n", fPktTimeSec, fStartTimeOffsetSec, fDurationSec);
+//#endif
         }
         else if (ptrPkt->stream_index == m_ptrContext->nSubtitleStreamIndex && pkt_in_play_range)
         {
             m_ptrContext->ptrSubTitleQueue->Put(ptrPkt);
+//#ifdef DEBUG
             av_log(nullptr, AV_LOG_INFO, "read subtitle fPktTimeSec: %.3f, fStartTimeOffsetSec: %.3f, fDurationSec: %.3f\n", fPktTimeSec, fStartTimeOffsetSec, fDurationSec);
+//#endif
         }
         else
         {
@@ -499,7 +506,7 @@ int StreamComponentOpen(SharePtr<CYMediaContext>& ptrContext, int nStreamIndex)
 
     if (nStreamIndex < 0 || nStreamIndex >= ptrContext->ptrIC->nb_streams)
         return -1;
-    
+
     ptrAVCtx = AVCodecContextPtrCreate(nullptr);
     if (!ptrAVCtx)
         return AVERROR(ENOMEM);
@@ -610,7 +617,7 @@ int StreamComponentOpen(SharePtr<CYMediaContext>& ptrContext, int nStreamIndex)
 
     //////////////////////////////////////////////////////////////////////////
 
-    if ((ret = ptrContext->auddec.Init(ptrAVCtx.release(), ptrContext->ptrAudioQueue, ptrContext->ptrReadCond)) < 0)
+    if ((ret = ptrContext->auddec.Init(ptrContext, ptrAVCtx.release(), ptrContext->ptrAudioQueue, ptrContext->ptrReadCond)) < 0)
         goto fail;
 
     if (ptrContext->ptrIC->iformat->flags & AVFMT_NOTIMESTAMPS)
@@ -626,7 +633,7 @@ int StreamComponentOpen(SharePtr<CYMediaContext>& ptrContext, int nStreamIndex)
         ptrContext->nVideoStreamIndex = nStreamIndex;
         ptrContext->pVideoStream = ptrContext->ptrIC->streams[nStreamIndex];
 
-        if ((ret = ptrContext->viddec.Init(ptrAVCtx.release(), ptrContext->ptrVideoQueue, ptrContext->ptrReadCond)) < 0)
+        if ((ret = ptrContext->viddec.Init(ptrContext, ptrAVCtx.release(), ptrContext->ptrVideoQueue, ptrContext->ptrReadCond)) < 0)
             goto fail;
 
         ptrContext->viddec.NotifyStart();
@@ -636,7 +643,7 @@ int StreamComponentOpen(SharePtr<CYMediaContext>& ptrContext, int nStreamIndex)
         ptrContext->nSubtitleStreamIndex = nStreamIndex;
         ptrContext->pSubTitleStream = ptrContext->ptrIC->streams[nStreamIndex];
 
-        if ((ret = ptrContext->subdec.Init(ptrAVCtx.release(), ptrContext->ptrSubTitleQueue, ptrContext->ptrReadCond)) < 0)
+        if ((ret = ptrContext->subdec.Init(ptrContext, ptrAVCtx.release(), ptrContext->ptrSubTitleQueue, ptrContext->ptrReadCond)) < 0)
             goto fail;
 
         ptrContext->subdec.NotifyStart();
@@ -699,7 +706,6 @@ void CYDemuxFilter::StreamSeek(int64_t pos, int64_t rel, int by_bytes)
     }
 }
 
-
 int64_t CYDemuxFilter::GetDuration() const
 {
     return m_ptrContext->nFileDuration;
@@ -732,12 +738,10 @@ int16_t CYDemuxFilter::Seek(int64_t nTimestamp)
     return ERR_SUCESS;
 }
 
-
 int16_t CYDemuxFilter::SetLoop(bool bLoop)
 {
     m_ptrContext->bLoop = bLoop;
     return ERR_SUCESS;
 }
-
 
 CYPLAYER_NAMESPACE_END

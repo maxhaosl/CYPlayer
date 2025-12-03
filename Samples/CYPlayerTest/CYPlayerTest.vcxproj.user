@@ -17,6 +17,6 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <RESOURCE_FILE>CYPlayer\CYPlayer.rc</RESOURCE_FILE>
+    <RESOURCE_FILE>CYPlayer.rc</RESOURCE_FILE>
   </PropertyGroup>
 </Project>

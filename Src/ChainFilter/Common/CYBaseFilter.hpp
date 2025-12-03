@@ -72,6 +72,8 @@ public:
     virtual int16_t Pause();
     virtual int16_t Resume();
 
+    virtual int16_t SetDisplaySize(int nWidth, int nHeight);
+
     virtual int16_t ProcessPacket(SharePtr<CYMediaContext>& ptrContext, AVPacketPtr& ptrPacket);
     virtual int16_t ProcessFrame(SharePtr<CYMediaContext>& ptrContext, AVFramePtr& ptrFrame);
 

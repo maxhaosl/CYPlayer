@@ -40,7 +40,6 @@
   * LICENSE:  Expat/MIT License, See Copyright Notice at the begin of this file.
   */
 
-
 #ifndef __CY_AUDIO_DECODE_FILTER_HPP__
 #define __CY_AUDIO_DECODE_FILTER_HPP__
 
@@ -74,6 +73,7 @@ private:
     int  CmpAudioFmts(enum AVSampleFormat fmt1, int64_t channel_count1, enum AVSampleFormat fmt2, int64_t channel_count2);
 
 private:
+    std::atomic_bool m_bStop = false;
     std::thread m_thread;
     SharePtr<CYMediaContext> m_ptrContext;
 };

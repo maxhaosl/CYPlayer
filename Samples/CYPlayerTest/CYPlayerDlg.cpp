@@ -180,12 +180,12 @@ BOOL CCYPlayerDlg::OnInitDialog()
     // TODO: 在此添加额外的初始化代码
     //m_objApplicaiton.Init(GetDlgItem(IDC_STC_VIDEO)->m_hWnd, rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
     m_player = CYPLAYER_NAMESPACE::CYPlayerFactory::CreatePlayer();
-     m_player->Init(&m_objParam);
-     m_player->SetWindow(GetDlgItem(IDC_STC_VIDEO)->m_hWnd);
-     m_player->SetPositionCallback(PositionCallBack);
+    m_player->Init(&m_objParam);
+    m_player->SetWindow(GetDlgItem(IDC_STC_VIDEO)->m_hWnd);
+    m_player->SetPositionCallback(PositionCallBack);
 
-     m_sliderVolume.SetRange(0, 100);
-     m_sliderVolume.SetPos(100);
+    m_sliderVolume.SetRange(0, 100);
+    m_sliderVolume.SetPos(100);
     return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -242,8 +242,8 @@ void CCYPlayerDlg::OnClose()
 {
     if (m_player)
     {
-         m_player->Stop();
-         m_player->UnInit();
+        m_player->Stop();
+        m_player->UnInit();
     }
     CYPLAYER_NAMESPACE::CYPlayerFactory::DestroyPlayer(m_player);
     //m_objApplicaiton.UnInit();
@@ -294,15 +294,15 @@ void CCYPlayerDlg::OnBnClickedBtnPause()
     if (m_player)
     {
         bool bPaused = false;
-         m_player->Pause(&bPaused);
-         if (bPaused)
-         {
-             GetDlgItem(IDC_BTN_PAUSE)->SetWindowText("继续");
-         }
-         else
-         {
-             GetDlgItem(IDC_BTN_PAUSE)->SetWindowText("暂停");
-         }
+        m_player->Pause(&bPaused);
+        if (bPaused)
+        {
+            GetDlgItem(IDC_BTN_PAUSE)->SetWindowText("继续");
+        }
+        else
+        {
+            GetDlgItem(IDC_BTN_PAUSE)->SetWindowText("暂停");
+        }
     }
 }
 

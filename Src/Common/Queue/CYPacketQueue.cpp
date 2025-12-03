@@ -54,7 +54,6 @@ int  CYPacketQueue::Put(AVPacketPtr& ptrPkt2)
 
 
     SharePtr<CYPacketWrapper> ptrPacket = MakeShared<CYPacketWrapper>();
-    int ret;
 
     if (bAbortRequest)
         return -1;

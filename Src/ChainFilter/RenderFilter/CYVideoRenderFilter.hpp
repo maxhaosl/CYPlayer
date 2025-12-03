@@ -40,7 +40,6 @@
   * LICENSE:  Expat/MIT License, See Copyright Notice at the begin of this file.
   */
 
-
 #ifndef __CY_VIDEO_RENDER_FILTER_HPP__
 #define __CY_VIDEO_RENDER_FILTER_HPP__
 
@@ -64,6 +63,8 @@ public:
 
     virtual int16_t Pause() override;
     virtual int16_t Resume() override;
+
+    virtual int16_t SetDisplaySize(int nWidth, int nHeight) override;
 
     virtual int16_t ProcessPacket(SharePtr<CYMediaContext>& ptrContext, AVPacketPtr& ptrPacket) override;
     virtual int16_t ProcessFrame(SharePtr<CYMediaContext>& ptrContext, AVFramePtr& ptrFrame) override;
@@ -116,6 +117,7 @@ private:
     bool m_bDisableAudio = false;
     bool m_bDisableVideo = false;
     bool m_bDisableSubTitle = false;
+    bool m_bPlayOver = false;
 
     SDLWindowPtr m_ptrWindow;
     SDLRendererPtr m_ptrRenderer;

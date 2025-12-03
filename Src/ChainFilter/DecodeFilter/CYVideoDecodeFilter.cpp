@@ -25,6 +25,7 @@ int16_t CYVideoDecodeFilter::UnInit()
 
 int16_t CYVideoDecodeFilter::Start(SharePtr<CYMediaContext>& ptrContext)
 {
+    m_bStop = false;
     m_ptrContext = ptrContext;
     std::function<void()> func = std::bind(&CYVideoDecodeFilter::OnEntry, this);
     m_ptrContext->viddec.Start(func, "VideoDecodeThread");
@@ -33,6 +34,7 @@ int16_t CYVideoDecodeFilter::Start(SharePtr<CYMediaContext>& ptrContext)
 
 int16_t CYVideoDecodeFilter::Stop(SharePtr<CYMediaContext>& ptrContext)
 {
+    m_bStop = true;
     ptrContext->viddec.Abort(ptrContext->pictq);
     ptrContext->viddec.Destroy();
     return CYBaseFilter::Stop(ptrContext);
@@ -151,6 +153,8 @@ int CYVideoDecodeFilter::QueuePicture(AVFrame* pSrcFrame, double pts, double dur
 void CYVideoDecodeFilter::OnEntry()
 {
     m_ptrContext->viddec.WaitStart();
+
+    if (m_bStop) return;
 
     AVFrame* pFrame = av_frame_alloc();
     double pts = 0;

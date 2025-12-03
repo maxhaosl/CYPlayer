@@ -56,6 +56,8 @@ int16_t CChainFilterManager::Init(EPlayerParam* pParam)
     if (!pParam) return ERR_PLAYER_PARAM_NOT_VARIABLE;
     m_eStateType = TYPE_STATUS_IDLE;
 
+    if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
+
     EXCEPTION_BEGIN
     {
         InitFFmpeg();
@@ -92,8 +94,9 @@ int16_t CChainFilterManager::Init(EPlayerParam* pParam)
         memcpy(m_ptrParam.get(), pParam, sizeof(EPlayerParam));
         m_ptrFirstFilter->Init(m_ptrParam);
         m_eStateType = TYPE_STATUS_INITIALIZED;
+        if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
     }
-    EXCEPTION_END([&] {m_eStateType = TYPE_STATUS_ERROR; });
+    EXCEPTION_END([&] { m_eStateType = TYPE_STATUS_ERROR;  if (m_funStateCallBack) m_funStateCallBack(m_eStateType); });
 
     return ERR_SUCESS;
 }
@@ -116,6 +119,7 @@ int16_t CChainFilterManager::UnInit()
     EXCEPTION_BEGIN
     {
         m_eStateType = TYPE_STATUS_IDLE;
+        if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
         return UnInitFFmpeg();
     }
     EXCEPTION_END;
@@ -189,6 +193,7 @@ int16_t CChainFilterManager::Open(const char* pszURL, EPlayerMediaParam* pParam)
                if (nRet == ERR_SUCESS)
                {
                    m_eStateType = TYPE_STATUS_PREPARED;
+                   if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
                }
                return nRet;
             }
@@ -218,6 +223,7 @@ int16_t  CChainFilterManager::Play()
         IfTrueThrow(m_eStateType == TYPE_STATUS_PLAYING, "Player Is Playing.");
         m_ptrFirstFilter->Start(m_ptrContext);
         m_eStateType = TYPE_STATUS_PLAYING;
+        if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
         return ERR_SUCESS;
     }
     EXCEPTION_END;
@@ -235,12 +241,14 @@ int16_t  CChainFilterManager::Pause(bool* bPaused)
         {
             m_ptrFirstFilter->Pause();
             m_eStateType = TYPE_STATUS_PAUSED;
+            if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
             *bPaused = true;
         }
         else
         {
             m_ptrFirstFilter->Resume();
             m_eStateType = TYPE_STATUS_PLAYING;
+            if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
             *bPaused = false;
         }
         return ERR_SUCESS;
@@ -257,10 +265,36 @@ int16_t  CChainFilterManager::Stop()
         IfTrueThrow(m_eStateType == TYPE_STATUS_IDLE, "Player State is TYPE_STATUS_IDLE.");
         m_ptrFirstFilter->Stop(m_ptrContext);
         m_eStateType = TYPE_STATUS_STOPPED;
+        if (m_funStateCallBack) m_funStateCallBack(m_eStateType);
     }
     EXCEPTION_END;
 
     return ERR_SUCESS;
+}
+
+/**
+ * Set Display Size.
+ */
+int16_t CChainFilterManager::SetDisplaySize(int32_t nWidth, int32_t nHeight)
+{
+    EXCEPTION_BEGIN
+    {
+        IfTrueThrow(m_eStateType == TYPE_STATUS_IDLE, "Player State is TYPE_STATUS_IDLE.");
+
+        if (m_ptrVideoRenderFilter)
+        {
+            auto ptrVideoRenderFilter = std::dynamic_pointer_cast<CYVideoRenderFilter>(m_ptrVideoRenderFilter);
+            if (ptrVideoRenderFilter)
+            {
+                return ptrVideoRenderFilter->SetDisplaySize(nWidth, nHeight);
+            }
+            return ERR_VARIABLE_CONVER_FAILED;
+        }
+        return ERR_NOT_INIT;
+    }
+    EXCEPTION_END;
+
+    return ERR_SETDISPLAYSIZE_ERROR;
 }
 
 /**
